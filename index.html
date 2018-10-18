@@ -3,7 +3,7 @@
 <head>
 
 	<meta charset="UTF-8">
-	<title>Scatterplot d3v4</title>
+	<title>Exportaciones de productos tradicionales a Estados Unidos</title>
 	<style type="text/css">
 		body{
 			margin: 0;
@@ -75,9 +75,11 @@
 			font-weight: bold;
 			color: #fff;
 			font-size: 26px;
+			font-family: 'Alegreya', serif;
 		}
 		
 	</style>
+	<link href="https://fonts.googleapis.com/css?family=Alegreya" rel="stylesheet"> 
 	<script type="text/javascript" src="https://d3js.org/d3.v5.min.js"></script>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -87,8 +89,7 @@
 <div class="row">
 <div class="text-center col-md-offset-2 col-md-8">
 <h2>¡Colombia no explota el TLC que firmó con Estados Unidos!
-<br/><h4>Mientras en los demás departamentos la cantidad de bibliotecas públicas son proporcionales al número de habitantes, en la capital
-sólo hay 19 bibliotecas, que deberían prestar servicios a más de 400.000 personas cada una.
+<br/><h4>X
 </h4>
 </div>
 </div>
@@ -104,62 +105,63 @@ sólo hay 19 bibliotecas, que deberían prestar servicios a más de 400.000 pers
 	 <br/>Login: jc.espitia912</p>
 	  
 	  <h3>Contexto</h3>
-	  <p>La importancia de las bibliotecas públicas:<br/>
-<br/>“Para nadie es un secreto que nuestro país registra unos índices de hábitos de lectura muy precarios por debajo incluso de países con similares niveles de desarrollo, lo cual se evidencia por ejemplo en evaluaciones a los estudiantes quienes adolecen de una real competencia comunicativa. Los planes desarrollados por el gobierno para contrarrestar esta problemática han sido irrelevantes, porque ha faltado una política social integradora que sea efectiva y que, en consecuencia ofrezca una mayor cobertura atendiendo todas las regiones…
-<br/>Las bibliotecas son escenarios de importancia sustantiva para la búsqueda del conocimiento y el desarrollo de una sociedad, ya que ponen al servicio de la comunidad los libros y demás medios culturales sobre todo en las zonas más apartadas y con problemas de acceso. Nos proporcionan herramientas que nos habilitan para conocer e interpretar mejor y de manera autónoma nuestro entorno social.” (Carvajal, 2004)
+	  <p>X:<br/>
+<br/>Y
+<br/>Z
 </p>
      
       <h3>Objetivo</h3>
 	  
-	  <p>Encontrar si existe o no una correlación entre el número de habitantes de cada departamento en Colombia y el número de bibliotecas públicas por departamento.
-		<br/>Encontrar departamentos con comportamientos atípicos a la tendencia general del país.
-		<br/>Comparar la relación entre el número de habitantes y el número de bibliotecas públicas entre las 5 regiones de Colombia.</p>
+	  <p> Encontrar la tendencia de exportaciones de los productos tradicionales Colombianos de las últimas decadas para evaluar el efecto del TLC firmado con Estados Unidos.
+		<br/>Encontrar productos con tendencias atípicas a la tendencia general de exportación de los productos tradicionales.
+		<br/>Comparar la similitud entre las tendencias de exportación de los productos tradicionales.</p>
 
 	  
 	  <h3>WHY</h3>
 	  <h4>Tarea principal</h4>
-	  <strong>Identify - Correlation:</strong> Identificar si existe o no una correlación entre el número de habitantes por departamento en Colombia y el número de bibliotecas públicas.
+	  <strong>T1. Summarize - Trends: (Variation)</strong> 
 	  <h4>Tareas secundarias</h4>
-<strong>1. Identify - Outliers: </strong> Encontrar departamentos con comportamientos atípicos a la tendencia general del país.
-<br/><strong>2. Compare - correlations:</strong> Comparar las correlaciones entre el número de habitantes y el número de bibliotecas públicas entre las 5 regiones de Colombia.
+	  <strong>T2. Identify - Outliers: </strong> Encontrar productos con tendencias atípicas.
+	  <br/><strong>T3. Compare - Trends:</strong> 
 
 	  <h3>WHAT</h3>
+	  
 	  <p>
-	  La visualización se basa en dos datasets originales (tablas) obtenidas del sitio web de datos abiertos. Sin embargo, se llevó a cabo un pre-procesamiento de los datos para tener una única tabla, utilizada en la visualización.
-	Los atributos son: 
-	<ul>
-		<li>Categórico: Departamento. (Key) </li>
-		<li>Categórico: Región del país.</li>
-		<li>Cuantitativo (Sequential): Número de habitantes.</li>
-		<li>Cuantitativo (Sequential): Número de bibliotecas públicas.</li>
+	  La visualización se basa en una Tabla obtenida del sitio web de datos abiertos. 
+	  Sin embargo, se creó un nuevo dataset temporal dejando por fuera las exportaciones de productos no tan relevantes y la información extra.
+	<p><strong>Dataset Type:</strong> Temporal.
+	<p><strong>Dataset Availability:</strong> Static.
+	<p><strong>Attributes: </strong>
+	<p><ul>
+		<li>Attribute: Producto.  Type: Categorical </li>
+		<li>Attribute: Variación anual de la exportación.  Type: Quantitative-Diverging </li>
+		<li>Attribute: Año.  Type: Quantitative-Sequential </li>
 	</ul>
 	 </p>
 		  
 	  <h3>HOW</h3>
-	  <h4>Idiom</h4>
-	  <p>Scatterplot.</p>
-	  <h4>Mark</h4>
-	  <p>Point.</p>
-	  <h4>Channels</h4>
-	  <p><strong>1. Spatial Regions. </strong>
-	  <br/>A. Distancia en X para expresar el atributo cuantitativo número de habitantes.
-	  <br/>B. Distancia en Y para expresar el atributo cuantitativo número de bibliotecas.
-	  <br/><strong>2. Color </strong> para expresar el atributo categórico Región de Colombia.</p>
-	  <h4>Encoding</h4>
-	<p><strong>Express:</strong> para los atributos cuantitativos número de habitantes y número de bibliotecas.
-	<br/><strong>Separate (horizontal and vertical):</strong> para el atributo categórico departamento, en donde cada punto corresponde a un departamento y tiene una posición en X (número de habitantes-quantitative) y Y (número de bibliotecas públicas-quantitative)
+	  <p><strong>Idiom:</strong> Linechart.
+	  <p><strong>Marks:</strong> Lines.
+	
+	<p><strong>Channels: </strong>
+	<p><ul>
+		<li>Position: Para el atributo cuantitativo divergente variación. </li>
+		<li>Color Hue: Para el atributo categorico producto. </li>
+	</ul>
+	 </p>
+	
+	<p><strong>Express:</strong> En X para el tiempo y en Y para la variación.
   </p>
 	<br/><br/>
 	<div class="text-center">
-		<h2>De nuevo los rolos se quedan detrás de los paisas y del resto del país. 
-		<br/><h4>Mientras en los demás departamentos la cantidad de bibliotecas públicas son proporcionales al número de habitantes, en la capital
-		sólo hay 19 bibliotecas, que deberían prestar servicios a más de 400.000 personas cada una.
-	</h4>
+		<h2>¡Colombia no explota el TLC que firmó con Estados Unidos!
+		<br/><h4>X
+		</h4>
 	</div>
 	<br/>
 	  <h3>Instrucciones de uso: </h3>
-	  1. Al colocar el mouse sobre uno de los puntos podrá conocer el departamento y observar el detalle de las variables. 
-	  <br/>2. Puede hacer click sobre cada una de las regiones en la leyenda para realizar un filtro y observar solamente la región de su interés. </p>
+	  1. Seleccione en el dropdown el grupo de datos que desea visualizar (Agregado o por productos). 
+	  <br/>2. Tooltip?</p>
     
 
 <script type="text/javascript">
