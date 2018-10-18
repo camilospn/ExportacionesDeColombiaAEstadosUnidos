@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+	<meta charset="UTF-8">
+	<title>Scatterplot d3v4</title>
+	<style type="text/css">
+		body{
+			margin: 0;
+			font-family: arial, sans;
+		}
+
+		.label{
+			font-size: 15px;
+		}
+
+		.legend text,
+		.axis text {
+			font-size: 13px;
+			fill: #333;
+		}
+
+		.axis path,
+		.axis line{
+			fill: none;
+			stroke-width: 1px;
+			stroke: #777;
+		}
+
+		.circle{
+			fill-opacity: 0.65;
+		}
+
+		.bubble{
+			opacity: 1;
+			transition: opacity 0.3s;
+		}
+
+		.bubble:hover text{
+			opacity: 1;
+		}
+
+		.bubble:hover circle{
+			fill-opacity: 1;
+		}
+
+		.legend rect{
+			fill-opacity: 0.75;
+		}
+
+		.legeng:hover rect{
+			fill-opacity:1;
+		}		
+
+		div.tooltip {
+		  position: absolute;
+		  text-align: center;
+		  width: 180px;
+		  height: 70px;
+		  padding: 2px;
+		  font: 12px sans-serif;
+		  background: #0c0c0c;
+		  color: white;
+		  border: 0px;
+		  border-radius: 8px;
+		  pointer-events: none;
+		}
+		
+		.buttonR {
+			font-size: 13px;
+			fill: #333;	
+			font-weight: bold;			
+		}
+		h1 {
+			font-weight: bold;
+			color: #fff;
+			font-size: 26px;
+		}
+		
+	</style>
+	<script type="text/javascript" src="https://d3js.org/d3.v5.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="jumbotron">
+<div class="row">
+<div class="text-center col-md-offset-2 col-md-8">
+<h2>¡Colombia no explota el TLC que firmó con Estados Unidos!
+<br/><h4>Mientras en los demás departamentos la cantidad de bibliotecas públicas son proporcionales al número de habitantes, en la capital
+sólo hay 19 bibliotecas, que deberían prestar servicios a más de 400.000 personas cada una.
+</h4>
+</div>
+</div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-offset-1 col-md-10" id="viz">
+      <h3>Autor</h3>
+      <p>
+	  Autor: Camilo Espitia 
+	 <br/>Código: 200812115
+	 <br/>Login: jc.espitia912</p>
+	  
+	  <h3>Contexto</h3>
+	  <p>La importancia de las bibliotecas públicas:<br/>
+<br/>“Para nadie es un secreto que nuestro país registra unos índices de hábitos de lectura muy precarios por debajo incluso de países con similares niveles de desarrollo, lo cual se evidencia por ejemplo en evaluaciones a los estudiantes quienes adolecen de una real competencia comunicativa. Los planes desarrollados por el gobierno para contrarrestar esta problemática han sido irrelevantes, porque ha faltado una política social integradora que sea efectiva y que, en consecuencia ofrezca una mayor cobertura atendiendo todas las regiones…
+<br/>Las bibliotecas son escenarios de importancia sustantiva para la búsqueda del conocimiento y el desarrollo de una sociedad, ya que ponen al servicio de la comunidad los libros y demás medios culturales sobre todo en las zonas más apartadas y con problemas de acceso. Nos proporcionan herramientas que nos habilitan para conocer e interpretar mejor y de manera autónoma nuestro entorno social.” (Carvajal, 2004)
+</p>
+     
+      <h3>Objetivo</h3>
+	  
+	  <p>Encontrar si existe o no una correlación entre el número de habitantes de cada departamento en Colombia y el número de bibliotecas públicas por departamento.
+		<br/>Encontrar departamentos con comportamientos atípicos a la tendencia general del país.
+		<br/>Comparar la relación entre el número de habitantes y el número de bibliotecas públicas entre las 5 regiones de Colombia.</p>
+
+	  
+	  <h3>WHY</h3>
+	  <h4>Tarea principal</h4>
+	  <strong>Identify - Correlation:</strong> Identificar si existe o no una correlación entre el número de habitantes por departamento en Colombia y el número de bibliotecas públicas.
+	  <h4>Tareas secundarias</h4>
+<strong>1. Identify - Outliers: </strong> Encontrar departamentos con comportamientos atípicos a la tendencia general del país.
+<br/><strong>2. Compare - correlations:</strong> Comparar las correlaciones entre el número de habitantes y el número de bibliotecas públicas entre las 5 regiones de Colombia.
+
+	  <h3>WHAT</h3>
+	  <p>
+	  La visualización se basa en dos datasets originales (tablas) obtenidas del sitio web de datos abiertos. Sin embargo, se llevó a cabo un pre-procesamiento de los datos para tener una única tabla, utilizada en la visualización.
+	Los atributos son: 
+	<ul>
+		<li>Categórico: Departamento. (Key) </li>
+		<li>Categórico: Región del país.</li>
+		<li>Cuantitativo (Sequential): Número de habitantes.</li>
+		<li>Cuantitativo (Sequential): Número de bibliotecas públicas.</li>
+	</ul>
+	 </p>
+		  
+	  <h3>HOW</h3>
+	  <h4>Idiom</h4>
+	  <p>Scatterplot.</p>
+	  <h4>Mark</h4>
+	  <p>Point.</p>
+	  <h4>Channels</h4>
+	  <p><strong>1. Spatial Regions. </strong>
+	  <br/>A. Distancia en X para expresar el atributo cuantitativo número de habitantes.
+	  <br/>B. Distancia en Y para expresar el atributo cuantitativo número de bibliotecas.
+	  <br/><strong>2. Color </strong> para expresar el atributo categórico Región de Colombia.</p>
+	  <h4>Encoding</h4>
+	<p><strong>Express:</strong> para los atributos cuantitativos número de habitantes y número de bibliotecas.
+	<br/><strong>Separate (horizontal and vertical):</strong> para el atributo categórico departamento, en donde cada punto corresponde a un departamento y tiene una posición en X (número de habitantes-quantitative) y Y (número de bibliotecas públicas-quantitative)
+  </p>
+	<br/><br/>
+	<div class="text-center">
+		<h2>De nuevo los rolos se quedan detrás de los paisas y del resto del país. 
+		<br/><h4>Mientras en los demás departamentos la cantidad de bibliotecas públicas son proporcionales al número de habitantes, en la capital
+		sólo hay 19 bibliotecas, que deberían prestar servicios a más de 400.000 personas cada una.
+	</h4>
+	</div>
+	<br/>
+	  <h3>Instrucciones de uso: </h3>
+	  1. Al colocar el mouse sobre uno de los puntos podrá conocer el departamento y observar el detalle de las variables. 
+	  <br/>2. Puede hacer click sobre cada una de las regiones en la leyenda para realizar un filtro y observar solamente la región de su interés. </p>
+    
+
+<script type="text/javascript">
+	var margin = {top: 30, right: 50, bottom: 40, left:40};
+	var width = 960 - margin.left - margin.right;
+	var height = 500 - margin.top - margin.bottom;
+
+	var div = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
+	
+	var svg = d3.select('#viz')
+		.append('svg')
+		.attr('width', width + margin.left + margin.right)
+		.attr('height', height + margin.top + margin.bottom)
+	.append('g')
+		.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+	// The API for scales have changed in v4. There is a separate module d3-scale which can be used instead. The main change here is instead of d3.scale.linear, we have d3.scaleLinear.
+	var xScale = d3.scaleLinear()
+		.range([0, width]);
+
+	var yScale = d3.scaleLinear()
+		.range([height, 0]);
+
+	// square root scale.
+	var radius = d3.scaleSqrt()
+		.range([2,5]);
+
+	// the axes are much cleaner and easier now. No need to rotate and orient the axis, just call axisBottom, axisLeft etc.
+	var xAxis = d3.axisBottom()
+		.scale(xScale);
+
+	var yAxis = d3.axisLeft()
+		.scale(yScale);
+
+	// again scaleOrdinal
+	var colorScale = d3.scaleOrdinal(["#AC30C0", "#A07A19", "#EB9A72", "#BA86F5", "#EA22A8"]);
+
+	d3.dsv(",", "tradicionales.csv", function(d) {
+		return { //Anio,Cafe,Carbon,Derivados,Ferroniquel,Petroleo
+			Anio : +d.Anio,
+			Cafe : +d.Cafe,
+			Carbon : +d.Carbon,
+			Derivados : +d.Derivados
+			
+		};
+	}).then(function(data) {
+		console.log(data);
+		
+		// 7. d3's line generator
+		var line = d3.line()
+		.x(function(d) { return xScale(d.key); }) // set the x values for the line generator
+		.y(function(d) { return yScale(d.value); }) // set the y values for the line generator 
+		.curve(d3.curveMonotoneX) // apply smoothing to the line
+
+		// 8. An array of objects of length N. Each object has key -> value pair, the key being "y" and the value is a random number
+		//no sirve . var dataSize = 27;
+		//no sirve . var dataset = d3.range(dataSize).map(function(d) { return {"y": d.Cafe } })
+		dataset = d3.nest()
+			  .key(function(d) {return d.Anio})
+			  .rollup(function(v) { return d3.sum(v, function(d) { return +d.Cafe})})
+			  .entries(data)
+		console.log(dataset);
+		
+		dataset2 = d3.nest()
+			  .key(function(d) {return d.Anio})
+			  .rollup(function(v) { return d3.sum(v, function(d) { return +d.Carbon})})
+			  .entries(data)
+		console.log(dataset2);
+		
+		//ahora va aqui el chart
+		xScale.domain(d3.extent(data, function(d){
+			return d.Anio;
+		})).nice();
+
+		yScale.domain(d3.extent(data, function(d){
+			return d.Cafe;
+		})).nice();
+		
+		
+		// adding axes is also simpler now, just translate x-axis to (0,height) and it's alread defined to be a bottom axis. 
+		svg.append('g')
+			.attr('transform', 'translate(0,' + height + ')')
+			.attr('class', 'x axis')
+			.call(xAxis);
+
+		// y-axis is translated to (0,0)
+		svg.append('g')
+			.attr('transform', 'translate(0,0)')
+			.attr('class', 'y axis')
+			.call(yAxis);  
+  		
+		// 9. Append the path, bind the data, and call the line generator 
+		svg.append("path")
+		.datum(dataset) // 10. Binds data to the line
+		.attr("d", line) // 11. Calls the line generator 
+		.attr("stroke", colorScale)
+		.attr("stroke-width", 2)
+		.attr("fill", "none");	
+
+
+		//boton para cambiar dataset			
+		svg.append('rect')
+			.attr('x', width - 100)
+			.attr('y', height - 280)
+			.attr('width', 118)
+			.attr('height', 30)
+			.style('fill', '#c7d9e8') // quitar el filtro
+			.on('click', function(type){
+			update(dataset2);
+		})
+		
+		
+		//update dataset
+		function update(newData) {
+
+			yScale.domain(d3.extent(newData, function(d){
+				return d.value;
+			})).nice();
+			
+			
+		
+			var update = svg.selectAll('path')
+			.data(newData, function (d) { return d })
+			
+			//console.log("update");
+			//console.log(update);
+					
+			//el nuevo path que no pinta nada...
+			var enter = update.enter()        
+			  .append("path")
+				.attr("d", line)
+				.attr("fill", "none")
+				.attr("stroke-width", 4)
+				.attr("stroke", "black");
+			
+			//console.log("Enter");
+			//console.log(enter);
+			
+			//pinta el otro dataset, si funciona... pero no usa update
+			svg.append("path")
+				.datum(newData) // 10. Binds data to the line 
+				.attr("d", line) // 11. Calls the line generator 
+				.attr("stroke", colorScale)
+				.attr("stroke-width", 2)
+				.attr("fill", "none");
+			
+			//borra el exit
+			var exit = update.exit()
+			.remove();
+		
+			//console.log("exit");
+			//console.log(exit);
+
+			//codigo anterior
+			//var exit = update.exit()
+				//update.style('stroke', 'black')
+				//enter.style('stroke', 'green')
+				//exit.style('stroke', 'red')
+				//.remove();
+			
+			update.merge(enter);		
+			//.call(pulse);
+		}
+			
+		//var bubble = svg.selectAll('.bubble')
+		//	.data(data)
+		//	.enter().append('circle')
+		//	.attr('class', 'bubble')
+		//	.attr('cx', function(d){return xScale(d.Habitantes);})
+		//	.attr('cy', function(d){ return yScale(d.Bibliotecas); })
+		//	.attr('r', function(d){ return 8; })
+		//	.style('fill', function(d){ return colorScale(d.Region); })
+		//	.on("mouseover", function(d) {
+		//		div.transition()
+		//		.duration(200)
+		//		.style("opacity", .9);
+		//		div.html("<br/>Departamento: "+d.Departamento +"<br/>Habitantes: "+d.Habitantes + "<br/>Bibliotecas: " + d.Bibliotecas)
+		//		.style("left", (d3.event.pageX) + "px")
+		//		.style("top", (d3.event.pageY - 28) + "px");
+		//	})
+		//	.on("mouseout", function(d) {
+		//		div.transition()
+		//		.duration(500)
+		//		.style("opacity", 0);
+		//	});
+
+		// adding label. For x-axis, it's at (10, 10), and for y-axis at (width, height-10).
+		svg.append('text')
+			.attr('x', 10)
+			.attr('y', 10)
+			.attr('class', 'label')
+			.text('Año');
+
+		svg.append('text')
+			.attr('x', width)
+			.attr('y', height - 10)
+			.attr('text-anchor', 'end')
+			.attr('class', 'label')
+			.text('Variación');
+
+		// I feel I understand legends much better now.
+		// define a group element for each color i, and translate it to (0, i * 20). 
+		//var legend = svg.selectAll('legend')
+			//.data(colorScale.domain())
+			//.enter().append('g')
+			//.attr('class', 'legend')
+			//.attr('transform', function(d,i){ return 'translate(0,' + (50 + i * 20) + ')'; });
+
+		// give x value equal to the legend elements. 
+		// no need to define a function for fill, this is automatically fill by color.
+		//legend.append('rect')
+			//.attr('x', width)
+			//.attr('width', 18)
+			//.attr('height', 18)
+			//.style('fill', colorScale);
+
+		// add text to the legend elements.
+		// rects are defined at x value equal to width, we define text at width - 6, this will print name of the legends before the rects.
+		//legend.append('text')
+			//.attr('x', width - 6)
+			//.attr('y', 9)
+			//.attr('dy', '.35em')
+			//.style('text-anchor', 'end')
+			//.text(function(d){ return Object.keys(d); });
+
+		//boton para reestablecer			
+		//svg.append('rect')
+		//	.attr('x', width - 100)
+		//	.attr('y', height - 280)
+		//	.attr('width', 118)
+		//	.attr('height', 30)
+		//	.style('fill', '#c7d9e8') // quitar el filtro
+		//	.on('click', function(type){
+		//	d3.selectAll('.bubble')
+		//		.style('opacity', 1);
+		//})
+
+		//svg.append('text')
+		//	.attr('x', width)
+		//	.attr('y', height - 260)
+		//	.attr('text-anchor', 'end')
+		//	.attr('class', 'buttonR')
+		//	.text('Reestablecer') 	// quitar el filtro
+		//	.on('click', function(type){
+		//	d3.selectAll('.bubble')
+		//		.style('opacity', 1);
+		//})
+		
+		//titulo de la leyenda
+		svg.append('text')
+			.attr('x', width + 16)
+			.attr('y', height - 390)
+			.attr('text-anchor', 'end')
+			.attr('class', 'buttonR')
+			.text('Productos');
+		
+			
+		// d3 has a filter fnction similar to filter function in JS. Here it is used to filter d3 components.
+		//legend.on('click', function(type){
+		//	d3.selectAll('.bubble')
+		//		.style('opacity', 0.15)
+		//		.filter(function(d){
+		//			return d.Region == type;
+		//		})
+		//		.style('opacity', 1);
+		//})		
+		
+	//Codigo de arriba que no servia...		
+			//Carbon			
+	// 9. Append the path, bind the data, and call the line generator 
+	//svg.append("path")
+    //.datum(dataset2) // 10. Binds data to the line 
+    //.attr("class", "line") // Assign a class for styling 
+    //.attr("d", line) // 11. Calls the line generator 
+	//.attr("stroke", colorScale)
+    //.attr("stroke-width", 4)
+    //.attr("fill", "none");	
+	
+	//no sirvio
+	//svg.selectAll("path")
+    //.data( d3.range(10) )
+    //.enter()
+    //.append("circle")
+    //.attr("r", 18 )
+    //.attr("cx", d3.scale.linear().domain([-1, 10]).range([0, 400]) )
+    //.attr("cy", 25)
+    //.attr("stroke", colorScale );
+
+		
+	});
+
+</script>
+
+	  <h3>INSIGHTS:</h3>
+	  <p>
+	  La visualización nos permite obtener los siguientes insights: 
+		<ul>
+			<li>La visualización nos muestra que efectivamente existe una correlación entre el número de habitantes de un departamento y el número de bibliotecas públicas encontradas en cada territorio. La correlación es positiva, entre más habitantes, más bibliotecas podemos encontrar. </li>
+			<li>Según la visualización Bogotá, se encuentra muy lejos de tener suficientes bibliotecas públicas para la cantidad de habitantes que tiene, comparado con el resto de país. <strong>En Bogotá, cada una de las 19 bibliotecas públicas debería atender más de 400 mil personas.</strong></li>
+			<li>Sobre todo resulta interesante observar que Antioquia, el departamento con el número de habitantes más cercano a Bogotá, si tiene un número de bibliotecas que corresponde a la tendencia general del país.</li>
+			<li>La región Andina es la que presenta mayor dispersión y también es la que contiene los outliers. Por una parte se encuentra Bogotá con muy pocas bibliotecas para sus habitantes, mientras que Boyacá tiene demasiadas bibliotecas en relación con la tendencia del país.</li>
+		</ul>
+	</p>
+<br/>
+<br/>
+<br/>
+		<h4>En 2016, la Alcaldía de Bogotá destino 150.000 millones de pesos para la campaña para el proyecto Leer es volar e incrementar el acceso a libros a través de las bibliotecas públicas.
+		<br/>Sin embargo, <strong>¿Es posible que esto ocurra si no hay suficientes bibliotecas públicas en Bogotá?</strong>
+		</h4>
+	<br/>
+	<br/>
+	
+	<h3>LICENSE:</h3>
+	<p>
+	Copyright 2018 Camilo Espitia
+	<br/>
+	Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+	<br/>
+	The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+	<br/>
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+	</p>
+
+
+
+	</div>
+	</div>
+	</div>
+</body>
+</html>
+
+
+
+
+
+
