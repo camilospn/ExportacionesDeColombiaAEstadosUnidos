@@ -188,9 +188,9 @@
 			  <span class="titulo2">WHY</span>
 			  
 			  <p><strong>Tarea principal</strong>
-			  <p><strong>T1. Summarize - Trends: (Variation)</strong> Encontrar la tendencia de exportaciones de los productos tradicionales Colombianos de las últimas decadas para evaluar el efecto del TLC firmado con Estados Unidos.
+			  <p><strong>T1. Summarize - Trends: (Variation)</strong> Encontrar la tendencia creciente o descendiente de las exportaciones de los productos tradicionales Colombianos de las últimas decadas para evaluar el efecto del TLC firmado con Estados Unidos.
 			  <p><strong>Tareas secundarias</strong><br/>
-			  <p><strong>T2. Identify - Outliers: </strong> Encontrar productos con tendencias atípicas a la tendencia general de exportación de los productos tradicionales.
+			  <p><strong>T2. Identify - Extremes: </strong> Encontrar los años de mayor variación tanto positiva como negativa de cada producto para analizar posibles razones.
 			  <p><strong>T3. Compare - Trends:</strong> Comparar las tendencias de exportación de los productos tradicionales.
 				
 			  <p>
@@ -216,7 +216,6 @@
 			<p><strong>Channels: </strong>
 			<p><ul>
 				<li>Position: Para el atributo cuantitativo divergente variación. </li>
-				<li>Color Hue: Para el atributo categorico producto. </li>
 			</ul>
 			 </p>
 			
@@ -366,6 +365,21 @@
 			.attr('class', 'yaxis')
 			.call(yAxis);  
   		
+		// adding label. For x-axis, it's at (10, 10), and for y-axis at (width, height-10).
+			svg.append('text')
+				.attr('x', 10)
+				.attr('y', 10)
+				.attr('class', 'label')
+				.text('Variación %');
+
+			svg.append('text')
+				.attr('x', width)
+				.attr('y', yScale(0) - 10)
+				.attr('text-anchor', 'end')
+				.attr('class', 'label')
+				.text('Año');
+
+		
 		// 9. Append the path, bind the data, and call the line generator 
 		svg.append("path")
 		.datum(dataset) // 10. Binds data to the line
