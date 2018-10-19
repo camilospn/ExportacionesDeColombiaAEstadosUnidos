@@ -295,7 +295,8 @@
 			Carbon : +d.Carbon,
 			Derivados : +d.Derivados,
 			Ferroniquel : +d.Ferroniquel,
-			Petroleo : +d.Petroleo
+			Petroleo : +d.Petroleo,
+			General : +d.General
 			
 		};
 	}).then(function(data) {
@@ -314,7 +315,7 @@
 		//no sirve . var dataset = d3.range(dataSize).map(function(d) { return {"y": d.Cafe } })
 		dataset = d3.nest()
 			  .key(function(d) {return d.Anio})
-			  .rollup(function(v) { return d3.sum(v, function(d) { return +d.Cafe})})
+			  .rollup(function(v) { return d3.sum(v, function(d) { return +d.General})})
 			  .entries(data)
 		
 		dataset1 = d3.nest()
@@ -349,7 +350,7 @@
 
 		//dominio por defecto - General
 		yScale.domain(d3.extent(data, function(d){
-			return d.Cafe;
+			return d.General;
 		})).nice();
 		
 		
