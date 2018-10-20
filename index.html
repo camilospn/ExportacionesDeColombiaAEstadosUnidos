@@ -14,6 +14,10 @@
 			font-size: 18px;
 			font-family: 'Alegreya', serif;
 		}
+		.label2{
+			font-size: 20px;
+			font-family: 'Alegreya', serif;
+		}
 		.legend text,
 		.axis text {
 			font-size: 13px;
@@ -151,8 +155,10 @@
 <div class="text-center general">
 	<div class="row">
 		<div class="text-center col-md-offset-3 col-md-6">
-			<span class="titulo">¡Colombia no explota el TLC que firmó con Estados Unidos!</span>
-			<br/><h4>X
+			<span class="titulo">¿Qué pasó con el TLC Colombia?</span>
+			<br/><h4>
+			Las exportaciones del Carbón y el Petróleo, dos de los productos más relevantes para Colombia han caído después del TLC.
+			
 			</h4>
 		<p>	Creado por: Camilo Espitia - Código: 200812115 - Login: jc.espitia912</p>
 		
@@ -164,23 +170,20 @@
 <div class="container general">
   <div class="row">
     <div class="col-md-offset-1 col-md-10" id="viz">
-		
-		
 			
 		<hr/>  
-			<span class="titulo2">Contexto</span>
+			<span class="titulo2 texto2">Contexto</span>
 			
 		
-			<p>X:<br/>
-			<br/>Y
-			<br/>Z
+			<p class="texto2">
+			En el año 2012, el Tratado de Libre Comercio entre los Estados Unidos y Colombia fue aprobado (Portafolio, 2018). Existían opiniones encontradas sobre sus ventajas y desventajas para el país. Uno de los principales argumentos hacía referencia a la historia de los tratados de Estados Unidos en dónde, el país norteamericano construía barreras arancelarias después de las firmas de los acuerdos, poniendo en desventaja a países con menor poder económico. Por ejemplo, en México fueron creados los subsidios para favorecer los productos del sector agrícola estadounidense, debilitando el sector local (López, 2011).
 			</p>
 			 
-			<span class="titulo2">Objetivo</span>
+			<span class="titulo2 texto2">Objetivo</span>
 		  
-			<p> Encontrar la tendencia de exportaciones de los productos tradicionales Colombianos de las últimas decadas para evaluar el efecto del TLC firmado con Estados Unidos.
-			<br/>Encontrar productos con tendencias atípicas a la tendencia general de exportación de los productos tradicionales.
-			<br/>Comparar las tendencias de exportación de los productos tradicionales.</p>
+			<p class="texto2">
+				En teoría, un tratado debería incrementar tanto la eficiencia como la tasa de crecimiento económico de un país.  Esta visualización tiene el objetivo de mostrarnos el antes y el después de las exportaciones de Colombia a Estados Unidos de los productos tradicionales como el Café, el Carbón, el Petróleo, los Derivados del Petróleo y el Ferroníquel, para ver si efectivamente el tratado de libre comercio incrementó las exportaciones o las disminuyó.
+			</p>
 		<hr/>
 		<br/>
 		
@@ -230,8 +233,9 @@
 	<div class="text-center">
 	<div class="row">
 		<div class="text-center col-md-offset-2 col-md-8">
-			<span class="titulo">¡Colombia no explota el TLC que firmó con Estados Unidos!</span>
-			<br/><h4>X
+			<span class="titulo">¿Qué pasó con el TLC Colombia?</span>
+			<br/><h4>
+			Las exportaciones del Carbón y el Petróleo, dos de los productos más relevantes para Colombia han caído después del TLC.
 			</h4>
 		</div>
 	</div>
@@ -240,12 +244,12 @@
 	
 	  <span class="titulo2">Instrucciones de uso:</span>
 	  <br/>1. Seleccione en el dropdown el grupo de datos que desea visualizar (Agregado o por productos). 
-	  <br/>2. Tooltip?</p>
+	  <br/>2. Al pasar el mouse sobre uno de los puntos podrá ver en detalle el porcentaje de variación para el año.</p>
 		<select name="cars" id="selector">
 		  <option value="0">General</option>
 		  <option value="1">Café</option>
 		  <option value="2">Carbón</option>
-		  <option value="3">Derivados</option>
+		  <option value="3">Derivados del petróleo</option>
 		  <option value="4">Ferroniquel</option>
 		  <option value="5">Petróleo</option>
 		  
@@ -285,9 +289,8 @@
 	var yAxis = d3.axisLeft()
 		.scale(yScale);
 
-	// again scaleOrdinal
-	var colorScale = d3.scaleOrdinal(["#022d07", "#A07A19", "#EB9A72", "#BA86F5", "#EA22A8"]);
-
+	
+	//cargo los datos
 	d3.dsv(",", "tradicionales.csv", function(d) {
 		return { //Anio,Cafe,Carbon,Derivados,Ferroniquel,Petroleo
 			Anio : +d.Anio,
@@ -300,9 +303,7 @@
 			
 		};
 	}).then(function(data) {
-		console.log(data);
-		
-					
+		console.log(data);					
 		
 		// 7. d3's line generator
 		var line = d3.line()
@@ -385,11 +386,35 @@
 		svg.append("path")
 		.datum(dataset) // 10. Binds data to the line
 		.attr("d", line) // 11. Calls the line generator 
-		.attr("stroke", colorScale)
+		.attr("stroke", "#022d07")
 		.attr("stroke-width", 2)
 		.attr("fill", "none");	
 
+		//añanir burbujas
+		var bubble = svg.selectAll('.bubble')
+			.data(dataset)
+			.enter().append('circle')
+			.attr('class', 'bubble')
+			.attr('cx', function(d){return xScale(d.key);})
+			.attr('cy', function(d){ return yScale(d.value); })
+			.attr('r', function(d){ return 4; })
+			.style('fill', "#A07A19")
+			.on("mouseover", function(d) {
+				div.transition()
+				.duration(200)
+				.style("opacity", .9);
+				div.html("<br/>Año: "+d.key +"<br/>Variación: "+d.value +"%")
+				.style("left", (d3.event.pageX) + "px")
+				.style("top", (d3.event.pageY - 28) + "px");
+			})
+			.on("mouseout", function(d) {
+				div.transition()
+				.duration(500)
+				.style("opacity", 0);
+			});
 		
+		
+		//cambiar datase
 		d3.select('#selector')
 			.on("change", function () {
 			selectedValue = d3.select('#selector').property('value');
@@ -397,21 +422,27 @@
 			
 			switch (+selectedValue) {
 				case 0:
+					svg.selectAll('.label2').text('Tendencia General');
 					update(dataset);
 					break;
 				case 1:
+					svg.selectAll('.label2').text('Café');
 					update(dataset1);
 					break;
 				case 2:
+					svg.selectAll('.label2').text('Carbón');
 					update(dataset2);
 					break;
 				case 3:
+					svg.selectAll('.label2').text('Derivados del Petróleo');
 					update(dataset3);
 					break;
 				case 4:
+					svg.selectAll('.label2').text('Ferroníquel');
 					update(dataset4);
 					break;
 				case 5:
+					svg.selectAll('.label2').text('Petróleo');
 					update(dataset5);
 					break;
 			}
@@ -433,6 +464,10 @@
 			svg.selectAll('.label')
 			.remove();
 			svg.selectAll('.label')
+			.remove();
+			
+			//quita los puntos
+			svg.selectAll('.bubble')
 			.remove();
 			
 			//cambio el dominio de Y
@@ -479,9 +514,32 @@
 			svg.append("path")
 				.datum(newData) // 10. Binds data to the line 
 				.attr("d", line) // 11. Calls the line generator 
-				.attr("stroke", colorScale)
+				.attr("stroke", "#022d07")
 				.attr("stroke-width", 2)
 				.attr("fill", "none");
+			
+				//añanir burbujas
+			var bubble = svg.selectAll('.bubble')
+				.data(newData)
+				.enter().append('circle')
+				.attr('class', 'bubble')
+				.attr('cx', function(d){return xScale(d.key);})
+				.attr('cy', function(d){ return yScale(d.value); })
+				.attr('r', function(d){ return 4; })
+				.style('fill', "#A07A19")
+				.on("mouseover", function(d) {
+					div.transition()
+					.duration(200)
+					.style("opacity", .9);
+					div.html("<br/>Año: "+d.key +"<br/>Variación: "+d.value+"%")
+					.style("left", (d3.event.pageX) + "px")
+					.style("top", (d3.event.pageY - 28) + "px");
+				})
+				.on("mouseout", function(d) {
+					div.transition()
+					.duration(500)
+					.style("opacity", 0);
+				});
 			
 			//borra el exit de la selección
 			var exit = update.exit()
@@ -490,119 +548,16 @@
 			//.call(pulse);		
 			
 		}
-			
-		//var bubble = svg.selectAll('.bubble')
-		//	.data(data)
-		//	.enter().append('circle')
-		//	.attr('class', 'bubble')
-		//	.attr('cx', function(d){return xScale(d.Habitantes);})
-		//	.attr('cy', function(d){ return yScale(d.Bibliotecas); })
-		//	.attr('r', function(d){ return 8; })
-		//	.style('fill', function(d){ return colorScale(d.Region); })
-		//	.on("mouseover", function(d) {
-		//		div.transition()
-		//		.duration(200)
-		//		.style("opacity", .9);
-		//		div.html("<br/>Departamento: "+d.Departamento +"<br/>Habitantes: "+d.Habitantes + "<br/>Bibliotecas: " + d.Bibliotecas)
-		//		.style("left", (d3.event.pageX) + "px")
-		//		.style("top", (d3.event.pageY - 28) + "px");
-		//	})
-		//	.on("mouseout", function(d) {
-		//		div.transition()
-		//		.duration(500)
-		//		.style("opacity", 0);
-		//	});
-
-		
-
-		// I feel I understand legends much better now.
-		// define a group element for each color i, and translate it to (0, i * 20). 
-		//var legend = svg.selectAll('legend')
-			//.data(colorScale.domain())
-			//.enter().append('g')
-			//.attr('class', 'legend')
-			//.attr('transform', function(d,i){ return 'translate(0,' + (50 + i * 20) + ')'; });
-
-		// give x value equal to the legend elements. 
-		// no need to define a function for fill, this is automatically fill by color.
-		//legend.append('rect')
-			//.attr('x', width)
-			//.attr('width', 18)
-			//.attr('height', 18)
-			//.style('fill', colorScale);
-
-		// add text to the legend elements.
-		// rects are defined at x value equal to width, we define text at width - 6, this will print name of the legends before the rects.
-		//legend.append('text')
-			//.attr('x', width - 6)
-			//.attr('y', 9)
-			//.attr('dy', '.35em')
-			//.style('text-anchor', 'end')
-			//.text(function(d){ return Object.keys(d); });
-
-		//boton para reestablecer			
-		//svg.append('rect')
-		//	.attr('x', width - 100)
-		//	.attr('y', height - 280)
-		//	.attr('width', 118)
-		//	.attr('height', 30)
-		//	.style('fill', '#c7d9e8') // quitar el filtro
-		//	.on('click', function(type){
-		//	d3.selectAll('.bubble')
-		//		.style('opacity', 1);
-		//})
-
-		//svg.append('text')
-		//	.attr('x', width)
-		//	.attr('y', height - 260)
-		//	.attr('text-anchor', 'end')
-		//	.attr('class', 'buttonR')
-		//	.text('Reestablecer') 	// quitar el filtro
-		//	.on('click', function(type){
-		//	d3.selectAll('.bubble')
-		//		.style('opacity', 1);
-		//})
 		
 		//titulo de la leyenda
 		svg.append('text')
 			.attr('x', width + 16)
 			.attr('y', height - 390)
 			.attr('text-anchor', 'end')
-			.attr('class', 'buttonR')
-			.text('LEYENDA');
+			.attr('class', 'label2')
+			.text('Tendencia general');
 		
-			
-		// d3 has a filter fnction similar to filter function in JS. Here it is used to filter d3 components.
-		//legend.on('click', function(type){
-		//	d3.selectAll('.bubble')
-		//		.style('opacity', 0.15)
-		//		.filter(function(d){
-		//			return d.Region == type;
-		//		})
-		//		.style('opacity', 1);
-		//})		
-		
-	//Codigo de arriba que no servia...		
-			//Carbon			
-	// 9. Append the path, bind the data, and call the line generator 
-	//svg.append("path")
-    //.datum(dataset2) // 10. Binds data to the line 
-    //.attr("class", "line") // Assign a class for styling 
-    //.attr("d", line) // 11. Calls the line generator 
-	//.attr("stroke", colorScale)
-    //.attr("stroke-width", 4)
-    //.attr("fill", "none");	
 	
-	//no sirvio
-	//svg.selectAll("path")
-    //.data( d3.range(10) )
-    //.enter()
-    //.append("circle")
-    //.attr("r", 18 )
-    //.attr("cx", d3.scale.linear().domain([-1, 10]).range([0, 400]) )
-    //.attr("cy", 25)
-    //.attr("stroke", colorScale );
-
 		
 	});
 
@@ -614,10 +569,12 @@
 	  <p >
 	  La visualización nos permite obtener los siguientes insights: 
 		<ul>
-			<li class="texto2">La visualización nos muestra que efectivamente existe una correlación entre el número de habitantes de un departamento y el número de bibliotecas públicas encontradas en cada territorio. La correlación es positiva, entre más habitantes, más bibliotecas podemos encontrar. </li>
-			<li class="texto2">Según la visualización Bogotá, se encuentra muy lejos de tener suficientes bibliotecas públicas para la cantidad de habitantes que tiene, comparado con el resto de país. <strong>En Bogotá, cada una de las 19 bibliotecas públicas debería atender más de 400 mil personas.</strong></li>
-			<li class="texto2">Sobre todo resulta interesante observar que Antioquia, el departamento con el número de habitantes más cercano a Bogotá, si tiene un número de bibliotecas que corresponde a la tendencia general del país.</li>
-			<li class="texto2">La región Andina es la que presenta mayor dispersión y también es la que contiene los outliers. Por una parte se encuentra Bogotá con muy pocas bibliotecas para sus habitantes, mientras que Boyacá tiene demasiadas bibliotecas en relación con la tendencia del país.</li>
+			<li class="texto2">La variación general de las exportaciones de los productos tradicionales comenzó a disminuir año tras año después de la firma del TLC con Estados Unidos, encontrando el pico más bajo en el año 2015. Desde entonces la disminución de las exportaciones se ha detenido pero apenas hasta dejar de disminuir año tras año.</li>
+			<li class="texto2">El Carbón y el Petróleo también encontraron sus picos más bajos en el año 2015 y en general muestran una tendencia decreciente desde 2012, cuándo fue aprobado el TLC.</li>
+			<li class="texto2">El Café ha comenzado a variar mucho menos con respecto a las dos decadas anteriores al TLC, sin embaro, no muestra un crecimiento, tan sólo disminución en la variación.</li>
+			<li class="texto2">Por el contrario, el ferroníquel, encontró su pico más alto en 2014 después de la firma del tratado y su pico más bajo el año siguiente, probablemente por una demanda extra en 2014.</li>
+			<li class="texto2">Por último, los productos derivados del Petróleo han mantenido una variación similar a la del periodo previo a la firma del tratado.</li>
+			<li class="texto2">En conclusión, las exportaciones de dos de los productos más significativos de los productos tradicionales que exporta Colombia han caído, mientras que los demás se han mantenido o alcanzado una estabilidad. Sin embargo, ninguno ha presentado un aumento en la variación de las exportaciones, negando directamente el efecto esperado del TLC al brindarle a Colombia el acceso al muy significativo mercado norteamericano.</li>
 		</ul>
 	</p>
 <br/>
